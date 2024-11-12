@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="mt-4">
+    <h2>Editar funcion.</h2>
+</div>
+<form action="{% url 'funcion_editar' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <p></p>
+    </div>
+    <div class="mb-3">
+        <p><strong>Nombre de la obra: </strong>{{ obra.nombre }}</p>
+    </div>
+    <input type="hidden" class="form-control" value="{{ funcion.id }}" id="id_funcion" name="id_funcion">
+    <input type="hidden" class="form-control" value="{{ obra.id }}" id="id_obra" name="id_obra">
+    <div class="mb-3">
+        <label for="fecha" class="form-label">Fecha de la funcion:</label>
+        <input type="date" class="form-control" value="{{ funcion.fecha|date:'Y-m-d' }}" id="fecha" name="fecha">
+    </div>
+    <div class="mb-3">
+        <label for="hora" class="form-label">Hora de la funcion:</label>
+        <input type="time" class="form-control" value="{{ funcion.hora|time:"H:i" }}" id="hora" name="hora">
+    </div>
+    <div class="mb-4">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'funcion_eliminar' funcion.id %}" class="btn btn-primary">Eliminar</a>
+        <a href="javascript:history.back()" class="btn btn-primary">Cancelar</a>
+    </div>
+    
+</form>
+{% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+<script src={% static "js/fila-actor.js" %}> </script>
+{% endblock %}

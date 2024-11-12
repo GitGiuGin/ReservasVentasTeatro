@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mt-4">
+    <h2>Actualizar cliente.</h2>
+</div>
+<form action="" method="POST" >
+    {% csrf_token %}
+    <div class="mb-3 mt-3">
+        <label for="nombre" class="form-label">Nombres: </label>
+        <input type="text" class="form-control" value="{{cliente.nombre}}" id="nombre" name="nombre" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+        <label for="apellido" class="form-label">Apellidos: </label>
+        <input type="text" class="form-control" value="{{cliente.apellido}}"id="apellido" name="apellido" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Direccion de correo electronico: </label>
+        <input type="email" class="form-control" value="{{cliente.email}}"id="email" name="email" aria-describedby="emailHelp">
+        <div id="emailHelp" class="form-text">Nunca compartiremos tu correo electrónico con nadie más.</div>
+    </div>
+    <div class="mb-3">
+        <label for="telefono" class="form-label">Telefono: </label>
+        <input type="text" class="form-control" value="{{cliente.telefono}}"id="telefono" name="telefono" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+        <label for="direccion" class="form-label">Direccion: </label>
+        <input type="text" class="form-control" value="{{cliente.direccion}}"id="direccion" name="direccion" aria-describedby="emailHelp">
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="javascript:history.back()" class="btn btn-primary">Cancelar</a>
+</form>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mt-4">
+    <h2>Nuevo actor.</h2>
+</div>
+<form action="{% url 'crear_actor' %}" method="POST" >
+    {% csrf_token %}
+    <div class="mb-3 mt-3">
+        <label for="nombre" class="form-label">*Nombres: </label>
+        <input type="text" class="form-control" id="nombre" name="nombre" required>
+    </div>
+    <div class="mb-3">
+        <label for="apellido" class="form-label">*Apellidos: </label>
+        <input type="text" class="form-control" id="apellido" name="apellido" required>
+    </div>
+    <div class="mb-3">
+        <label for="edad" class="form-label">*Edad: </label>
+        <input type="text" class="form-control" id="edad" name="edad" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="javascript:history.back()" class="btn btn-primary">Cancelar</a>
+</form>
+
+{% endblock %}

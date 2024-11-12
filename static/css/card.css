@@ -1,0 +1,6 @@
+.card-body {
+    min-height: 200px; /* Ajusta este valor según tus necesidades */
+    display: flex;
+    flex-direction: column; /* Apila los elementos verticalmente */
+    justify-content: space-between; /* Espacia los elementos para mantener el botón en la parte inferior */
+}

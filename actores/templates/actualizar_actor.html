@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mt-4">
+    <h2>Actualizar actor.</h2>
+</div>
+<input type="hidden" name="id_actor" value="{{ actor.id }}">
+<form action="" method="POST" >
+    {% csrf_token %}
+    <div class="mb-3 mt-3">
+        <label for="nombre" class="form-label">Nombres: </label>
+        <input type="text" class="form-control" value="{{actor.nombre}}" id="nombre" name="nombre" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+        <label for="apellido" class="form-label">Apellidos: </label>
+        <input type="text" class="form-control" value="{{actor.apellido}}"id="apellido" name="apellido" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+        <label for="edad" class="form-label">Edad: </label>
+        <input type="number" class="form-control" value="{{actor.edad}}" id="edad" name="edad" aria-describedby="emailHelp">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="javascript:history.back()" class="btn btn-primary">Cancelar</a>
+</form>
+{% endblock %}

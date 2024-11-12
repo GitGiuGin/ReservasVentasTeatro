@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="mt-3">
+    <form method="GET" action="{% url 'lista_obra' %}" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="searchObra" class="form-control" placeholder="Buscar obra" value="{{ request.GET.searchObra }}">
+            <button class="btn btn-dark" type="submit">Buscar</button>
+        </div>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="text-center align-middle p-1" scope="col">#</th>
+            <th class="align-middle p-1" scope="col">Obra</th>
+            <th class="text-center align-middle p-1" scope="col">Imagen</th>
+            <th class="text-center align-middle p-1" scope="col">Funciones</th>
+            <th class="text-center align-middle p-1" scope="col">Hora</th>
+            <th class="text-center align-middle p-1" scope="col">Precio</th>
+            <th class="text-center align-middle p-1" scope="col">Estado</th>
+            <th class="text-center align-middle p-1" scope="col">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for obra in obra %}
+        <tr>
+            <td class="align-middle p-1"> {{ forloop.counter }}</td>
+            <td class="align-middle p-1">{{obra.nombre}}</td>
+            <td class="align-middle p-1">
+                <div class="text-center">
+                {% if obra.imagen %}
+                    <img src="..{{ obra.imagen.url }}" alt="{{ obra.nombre }}" class="rounded" style="max-width: 100px; max-height: 100px;">
+                {% else %}
+                    <span>No hay imagen</span>
+                {% endif %}
+                </div>
+            </td>
+            <td class="text-center align-middle p-1">
+                {% if obra.funciones.all %}
+                    <ul class="list-unstyled">
+                        {% for funcion in obra.funciones.all %}
+                            <li>{{ funcion.fecha_formateada }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <span>No hay funciones registradas</span>
+                {% endif %}
+            </td>
+            <td class="text-center align-middle p-1">
+                {% if obra.funciones.all %}
+                    <ul class="list-unstyled">
+                        {% for funcion in obra.funciones.all %}
+                            <li>{{ funcion.formato_hora }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <span>No hay funciones registradas</span>
+                {% endif %}
+            </td>
+            <td class="text-center align-middle p-1">{{obra.precio_bs}}</td>
+            <td class="text-center align-middle p-1">{{obra.estado_display}}</td>
+            <td class="text-center align-middle p-1">
+                <a href="update/{{obra.id}}" class="btn btn-sm btn-info m-1">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+                <a href="obra_detalle/{{obra.id}}" class="btn btn-sm btn-info m-1">
+                    <i class="fas fa-edit"></i> Detalles
+                </a>
+                <a href="{% url 'cambiar_estado' obra.id %}" class="btn btn-sm btn-info m-1">
+                    <i class="fas fa-edit"></i> Cambiar estado
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

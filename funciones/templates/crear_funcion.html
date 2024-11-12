@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="mt-4">
+    <h2>Nueva funcion.</h2>
+</div>
+<form action="{% url 'crear_funcion' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="obra" class="form-label">Obra: </label>
+        <select class="form-control" id="selectObra" name="selectObra">
+            <option value="">Seleccione una obra </option>
+            {% for obra in obras %}
+            <option value="{{ obra.id }}" >{{ obra.nombre }}</option>
+            {% endfor %}
+        </select>
+        <div class="invalid-feedback">Por favor, seleccione un tren si corresponde.</div>
+    </div>
+    <div class="mb-3">
+        <label for="fecha" class="form-label">Fecha de la obra:</label>
+        <input type="date" class="form-control" id="fecha" name="fecha">
+    </div>
+    <div class="mb-3">
+        <label for="hora" class="form-label">Hora de la obra:</label>
+        <input type="time" class="form-control" id="hora" name="hora">
+    </div>
+    <div class="mb-4">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="javascript:history.back()" class="btn btn-primary">Cancelar</a>
+    </div>
+    
+</form>
+{% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+<script src={% static "js/fila-actor.js" %}> </script>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block content %}
+<div class="mt-4">
+    <h2>Detalles de la obra.</h2>
+</div>
+
+<div class="mb-3 d-flex">
+    <div class="form-group col-md-6 me-3 mt-3">
+        <div class="text-center">
+            {% if obra.imagen %}
+            <img src="../..{{ obra.imagen.url }}" alt="{{ obra.nombre }}" class="rounded"
+                style="max-width: 400px; max-height: 400px;">
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group col-md-6 mt-3">
+        <h4>{{ obra.nombre }}</h4>
+        <br>
+        <strong>Funciones: </strong>
+        <div class="container col-md-8 mt-8">
+            <div class="row">
+                <div class="col">
+                    <p><strong>Fecha: </strong></p>
+                </div>
+                <div class="col">
+                    <p><strong>Hora: </strong></p>
+                </div>
+                {% if user.is_authenticated and user.tipo_usuario == 'cliente' %}
+                <div class="col">
+                    <p><strong>Asientos disponiles: </strong></p>
+                </div>
+                <div class="col">
+                    <p><strong>Acciones: </strong></p>
+                </div>
+                {% endif %}
+                {% if user.is_authenticated and user.tipo_usuario == 'personal' %}
+                <div class="col">
+                    <p><strong>Acciones: </strong></p>
+                </div>
+                {% endif %}
+            </div>
+            {% for f in funciones %}
+            <input type="hidden" name="funcion_id" value="{{ f.id }}">
+            <div class="row">
+                <div class="col">
+                    <p>{{ f.fecha_formateada }}</p>
+                </div>
+                <div class="col">
+                    {{ f.formato_hora}}
+                </div>
+                {% if user.is_authenticated and user.tipo_usuario == 'cliente' %}
+                <div class="col">
+                    <div class="text-center"> {{ total_asientos_disponibles_por_funcion|get_item:f.id }} </div>
+                </div>
+                <div class="col">
+                    <a href="{% url 'seleccion_asiento' funcion_id=f.id %}" class="btn btn-primary">Reservar</a>
+                </div>
+                {% endif %}
+                {% if user.is_authenticated and user.tipo_usuario == 'personal' %}
+                <div class="col">
+                    <a href="{% url 'actualizar_funcion' obra.id f.id %}" class="btn btn-primary">Editar</a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+        </div>
+        <div class="row">
+            <div class="col">
+                <p><strong>Costo: </strong> {{obra.precio_bs}}</p>
+            </div>
+        </div>
+        <div>
+            <h5>Actores: </h5>
+            <ul>
+                {% for a in actores_seleccionados %}
+                <li>{{ a.nombre }} {{ a.apellido }}</li>
+                {% endfor %}
+            <ul>
+        </div>
+    </div>
+    
+</div>
+<div class="mb-4">
+    <a href={% url 'index' %} class="btn btn-primary">Volver</a>
+</div>
+{% endblock %}

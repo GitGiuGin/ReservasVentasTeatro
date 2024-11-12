@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .formulario-centro {
+        max-width: 70%; /* Ajusta el tamaño máximo del formulario según tus necesidades */
+        width: 100%;
+    }
+    /* Establece un tamaño uniforme para cada asiento */
+    .asiento {
+        width: 60px; /* Ajusta el ancho según lo que prefieras */
+        text-align: center;
+    }
+    .btn {
+        width: 100%;
+        height: auto; /* Asegúrate de que la altura se ajuste automáticamente */
+        padding: 0.5rem 0; /* Ajusta el padding si es necesario */
+        margin: 0; /* Evita márgenes que puedan cambiar el tamaño */
+    }
+    .btn-success {
+        width: 100%;
+    }
+    .botones-container {
+        display: flex;
+        justify-content: flex-end; /* Alinea los botones a la derecha */
+        gap: 10px; /* Espacio entre los botones */
+    }
+</style>
+<div class="container d-flex justify-content-center mt-4">
+    <h5>Confirmacion de asientos</h5>
+</div>
+<form action="{% url 'reserva_nuevo' %}" method="POST"> {% csrf_token %}
+    <div class="card">
+        <div class="card-header">
+            Datos de la reserva
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-4">
+                        <strong>Cliente: </strong>{{ usuario.nombre }} {{ usuario.apellido }} <br>
+                        <strong>Correo: </strong>{{ usuario.email }}
+                    </div>
+                    <div class="col-4">
+                        <strong>Obra: </strong> {{ obra_nombre }} <br>
+                        <strong>Precio por asiento: </strong>{{ obra_precio }}
+                    </div>
+                    <div class="col-4">
+                        <strong>Funcion: </strong> {{ funcion_fecha  }} <br>
+                        <strong>Hora: </strong>{{ funcion_hora }}
+                        <input type="hidden" name="id_funcion" value="{{ id_funcion }}">
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <!-- DETALES DE ASIENTOS SELECCIONADOS -->
+                <strong>Asientos seleccionados:</strong><br>
+                <div class="d-flex justify-content-center">
+                    <ul class="list-inline text-center">
+                        {% for asiento in asientos_seleccionados %}
+                            <li class="list-inline-item badge bg-info p-2 mb-1 asiento-item">{{ asiento }}</li>
+                            <input type="hidden" name="asientos_reservados" value="{{ asiento.id }}">
+                            
+                            {% if forloop.counter|divisibleby:10 %}
+                                <br>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <br>
+                <br>
+                <strong>Total asientos:</strong> {{ total_asientos }}<br>
+                <strong>Total reserva:</strong> {{ total_reserva }} Bs.-
+            </li>
+            <li class="list-group-item">
+                <div class="botones-container mt-3">
+                    <button type="submit" class="btn btn-primary">Confirmar Asientos</button>
+                    <a href="javascript:history.back()" class="btn btn-primary" onclick="cancelarReservacion()">Cancelar</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</form>
+{% endblock %}

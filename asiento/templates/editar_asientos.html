@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .formulario-centro {
+        max-width: 90%; /* Ajusta el ancho máximo del formulario */
+        width: 100%; /* Asegúrate de que el formulario ocupe todo el ancho disponible */
+    }
+    /* Establece un tamaño uniforme para cada asiento */
+    .asiento {
+        width: 60px; /* Ajusta el ancho según lo que prefieras */
+        text-align: center;
+    }
+    .btn {
+        width: 100%;
+        height: auto; /* Asegúrate de que la altura se ajuste automáticamente */
+        padding: 0.5rem 0; /* Ajusta el padding si es necesario */
+        margin: 0; /* Evita márgenes que puedan cambiar el tamaño */
+    }
+    .btn-success {
+        width: 100%;
+    }
+    .botones-container {
+        display: flex;
+        justify-content: flex-end; /* Alinea los botones a la derecha */
+        gap: 10px; /* Espacio entre los botones */
+    }
+</style>
+<div class="container d-flex justify-content-center mt-4">
+    <h5>Edicion de asientos</h5>
+</div>
+<div class="container d-flex justify-content-center align-items-center"> <!-- Ajusta la altura mínima de la vista -->
+    <form action="{% url 'reserva_editar' reserva_id %}" method="POST" class="formulario-centro">
+        {% csrf_token %}
+        <div class="card">
+            <div class="card-header">
+                <p>Datos de la reserva anterior:</p>
+                {% for id_reserva_asiento, id_asiento, numero_asiento in asientos_reservados %}
+                <label class="list-inline-item badge bg-info p-2">{{ numero_asiento }}</label>
+                {% endfor %}
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-4">
+                            <strong>Cliente: </strong>{{ usuario.nombre }} {{ usuario.apellido }} <br>
+                            <strong>Correo: </strong>{{ usuario.email }}
+                        </div>
+                        <div class="col-4">
+                            <strong>Obra: </strong> {{ obra.nombre }} <br>
+                            <strong>Precio por asiento: </strong>{{ obra.precio_bs }}
+                        </div>
+                        <div class="col-4">
+                            <input type="hidden" name="funcion_id" value={{ funcion.id }}>
+                            <strong>Funcion: </strong> {{ funcion.fecha_formateada }} <br>
+                            <strong>Hora: </strong>{{ funcion.formato_hora }}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <strong>Asientos disponibles: {{asientos_disponibles}}</strong>
+                    <div class="container d-flex justify-content-center mt-4">
+                        <div class="container">
+                            {% for a in asientos %}
+                                {% if forloop.counter0|divisibleby:10 %}
+                                    <div class="d-flex justify-content-center mb-2 flex-wrap">
+                                {% endif %}
+                                
+                                <div class="asiento m-1">
+                                    <input name="asientos_seleccionados" value="{{ a.id }}" type="checkbox" class="btn-check" id="btn-check-{{ a.id }}" autocomplete="off" {{ a.estado_check }}>
+                                    <label
+                                        id="label-{{ a.id }}"
+                                        class="btn {% if a.estado_check == 'checked' %} 
+                                                        btn-danger active 
+                                                    {% else %} 
+                                                        btn-success active 
+                                                    {% endif %}" 
+                                        for="btn-check-{{ a.id }}" 
+                                        {% if a.estado_check == 'checked' %}
+                                            data-bs-toggle="button"
+                                            aria-pressed="true"
+                                        {% else %}
+                                            aria-pressed="false"
+                                        {% endif %}
+                                    >
+                                        {{ a.numero_asiento }}
+                                    </label>
+                                </div>
+                                
+                                {% if forloop.counter0|add:1|divisibleby:10 %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="botones-container mt-3">
+                        <button type="submit" class="btn btn-primary">Reservar Asientos</button>
+                        <a href="javascript:history.back()" class="btn btn-primary" onclick="cancelarReservacion()">Cancelar</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.btn-check').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                var id = this.id;
+                var label = document.getElementById('label-' + id.split('-').pop());
+    
+                if (this.checked) {
+                    label.classList.remove('btn-success');
+                    label.classList.add('btn-warning');
+                } else {
+                    label.classList.remove('btn-warning');
+                    label.classList.add('btn-success');
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

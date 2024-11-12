@@ -1,0 +1,5 @@
+SOFTWARE INSTALADO
+    - Python 3.12.6
+    - Postgres SQL (15.8.2)
+    - Django 5.1.1 (pip install django)
+    - psycopg2  (pip install psycopg2)
