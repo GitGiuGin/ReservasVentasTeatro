@@ -7,7 +7,6 @@ from datetime import datetime
 from weasyprint import HTML
 from usuario.models import Usuario
 from pago.models import Pago
-import pytz
 
 # Create your views here.
 def vista_preliminar_reporte_clientes(request):

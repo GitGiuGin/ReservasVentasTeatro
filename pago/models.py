@@ -15,7 +15,7 @@ class Pago(models.Model):
     monto_total = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto Total")
     fecha_pago = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Pago")
     metodo_pago = models.CharField(max_length=50, verbose_name="Método de Pago")
-    archivo_pago = models.FileField(upload_to='comprobantes/', null=True, blank=True)
+    archivo_pago = models.FileField(upload_to=renombrar_archivo_pago , null=True, blank=True)
 
     class Meta:
         verbose_name = "Pago"

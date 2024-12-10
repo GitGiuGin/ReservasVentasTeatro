@@ -88,7 +88,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'reserva_teatro',        # Reemplaza con el nombre de tu base de datos
         'USER': 'postgres',                # Reemplaza con tu nombre de usuario de PostgreSQL
-        'PASSWORD': 'Darckhammer1*',         # Reemplaza con tu contraseña de PostgreSQL
+        'PASSWORD': 'utbadmin',         # Reemplaza con tu contraseña de PostgreSQL
         'HOST': 'localhost',                  # Cambia si tu base de datos está en otro host
         'PORT': '5432',                       # Puerto por defecto para PostgreSQL
     }
