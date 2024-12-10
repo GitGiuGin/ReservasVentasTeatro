@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Ventas</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 1cm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .header {
+            display: table;
+            width: 100%;
+            margin-bottom: 1em;
+            font-size: 12px;
+        }
+        .header .left, .header .center, .header .right {
+            display: table-cell;
+            vertical-align: top;
+            padding: 5px;
+        }
+        .header .left {
+            width: 33%;
+            text-align: left;
+        }
+        .header .center {
+            width: 33%;
+            text-align: center;
+        }
+        .header .right {
+            width: 33%;
+            text-align: left;
+        }
+        .header .right div {
+            margin-bottom: 5px;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 5px;
+            font-size: 12px;
+            word-wrap: break-word;
+        }
+        th {
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="left">
+            <strong>Teatro</strong><br><br>
+            <strong>Usuario:</strong> {{ administrador.nombre }} {{ administrador.apellido }}
+        </div>
+        <div class="center">
+            <strong>Reporte de Ventas</strong><br><br>
+            <strong>Correo:</strong> {{ administrador.email }}
+        </div>
+        <div class="right">
+            <div><strong>Fecha:</strong> {{ now|date:"d/m/Y H:i:s" }}</div><br>
+            <div><strong>Rol:</strong> {{ administrador.get_tipo_usuario_display }}</div>
+        </div>
+    </div>
+    {% if fecha_inicio and fecha_fin %}
+        <p>Desde {{ fecha_inicio|date:"d/m/Y" }} hasta {{ fecha_fin|date:"d/m/Y" }}</p>
+    {% else %}
+        <p>Global</p>
+    {% endif %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Fecha de<br>Pago</th>
+                <th style="width: 25%;">Cliente</th>
+                <th style="width: 25%;">Obra</th>
+                <th>Fecha<br>funcion</th>
+                <th>Hora<br>funcion</th>
+                <th>Numero<br>Asientos</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pago in resultados %}
+            <tr>
+                <td class="text-center">{{ forloop.counter }}</td>
+                <td class="text-center">{{ pago.fecha_pago|date:"d/m/Y" }}</td>
+                <td style="width: 25%;">{{ pago.reserva.cliente.nombre }} {{ pago.reserva.cliente.apellido }}</td>
+                <td style="width: 25%;">{{ pago.reserva.funcion.obra.nombre }} </td>
+                <td class="text-center">{{ pago.reserva.funcion.fecha|date:"d/m/Y" }} </td>
+                <td class="text-center">{{ pago.reserva.funcion.hora|time:"H:i" }} </td>
+                <td class="text-center"> {{ pago.num_asientos_reservados }}</td>
+                <td class="text-center">{{ pago.monto_total }} Bs.-</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Ventas registradas: </strong>{{ resultados|length }}</td>
+                <td class="text-center"><strong>Total :</strong></td>
+                <td class="text-center"><strong>{{ total_ventas }} Bs.-</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>

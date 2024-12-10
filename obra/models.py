@@ -1,5 +1,6 @@
 from django.db import models
 from actores.models import Actores
+from categoria.models import Categoria
 
 # Create your models here.
 class Obra(models.Model):
@@ -7,6 +8,7 @@ class Obra(models.Model):
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     imagen = models.ImageField(upload_to='obras/', null=True, blank=True, verbose_name="Imagen de la obra")
     estado = models.BooleanField(default=True)
+    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, verbose_name="Categoria", blank=True, null=True)
     # Relación Many-to-Many con el modelo Actores
     actores = models.ManyToManyField(Actores, related_name="obras", verbose_name="Actores en la obra", blank=True)
 

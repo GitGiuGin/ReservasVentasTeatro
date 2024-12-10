@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'pago',
     'usuario',
     'funciones',
+    'categoria',
+    'reportes',
 ]
 
 MIDDLEWARE = [

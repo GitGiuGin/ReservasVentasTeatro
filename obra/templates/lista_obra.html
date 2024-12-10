@@ -15,6 +15,7 @@
         <tr>
             <th class="text-center align-middle p-1" scope="col">#</th>
             <th class="align-middle p-1" scope="col">Obra</th>
+            <th class="text-center align-middle p-1" scope="col">Categoria</th>
             <th class="text-center align-middle p-1" scope="col">Imagen</th>
             <th class="text-center align-middle p-1" scope="col">Funciones</th>
             <th class="text-center align-middle p-1" scope="col">Hora</th>
@@ -26,8 +27,9 @@
     <tbody>
         {% for obra in obra %}
         <tr>
-            <td class="align-middle p-1"> {{ forloop.counter }}</td>
+            <td class="text-center align-middle p-1"> {{ forloop.counter }}</td>
             <td class="align-middle p-1">{{obra.nombre}}</td>
+            <td class="align-middle p-1">{{obra.categoria.nombre}}</td>
             <td class="align-middle p-1">
                 <div class="text-center">
                 {% if obra.imagen %}

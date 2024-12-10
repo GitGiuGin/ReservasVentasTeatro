@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .table th,
+    .table td {
+        text-align: center;
+    }
+
+    .btn-dark {
+        background-color: #343a40;
+        border-color: #343a40;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+</style>
+<div class="container mt-4">
+    <h3 class="text-center">Mis Compras</h3>
+    <div class="d-flex justify-content-between mb-4 mt-3">
+        <form id="searchForm" method="GET" action="#" class="w-50">
+            <div class="input-group">
+                <input type="text" name="searchReserva" class="form-control" placeholder="Buscar reserva"
+                    value="{{ request.GET.searchReserva }}">
+                <button class="btn btn-primary" type="submit" onclick="submitSearch()">
+                    <i class="fa fa-search" aria-hidden="true"></i> Buscar
+                </button>
+            </div>
+        </form>
+        <a href={% url 'index' %} class="btn btn-primary">
+            Nueva reserva
+        </a>
+    </div>
+
+    <!-- Tabla de Reservas -->
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">Obra</th>
+                <th class="text-center" scope="col">Fecha</th>
+                <th class="text-center" scope="col">Hora</th>
+                <th class="text-center" scope="col">Reservado</th>
+                <th class="text-center" scope="col">Asientos</th>
+                <th class="text-center" scope="col">Estado</th>
+                <th class="text-center" scope="col">Total Cancelado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reservas %}
+            <tr>
+                <td class="text-center">{{ r.funcion__obra__nombre}}</td>
+                <td class="text-center">{{ r.funcion__fecha|date:"d/m/Y"}}</td>
+                <td class="text-center">{{ r.funcion__hora|time:"H:i"}}</td>
+                <td class="text-center">{{ r.fecha_reserva|date:"d/m/Y"}}</td>
+                <td class="text-center">{{ r.asientos_reservados}}</td>
+                <td class="text-center">{{ r.estado}}</td>
+                <td class="text-center">{{ r.total_a_pagar }} Bs.- </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

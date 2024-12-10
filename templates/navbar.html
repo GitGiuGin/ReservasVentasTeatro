@@ -14,6 +14,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href={% url 'mis_reservas' %}>Reservas</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'mis_compras' %}>Compras</a>
+                </li>
                 {% endif %}
                 {% if not user.is_authenticated %}
 
@@ -43,6 +46,13 @@
                             </ul>
                         </li>
                         <li><a class="dropdown-item" href="#">
+                            Categorias &raquo;</a>
+                            <ul class="dropdown-menu submenu">
+                                <li><a class="dropdown-item" href={% url 'crear_categoria' %}>Registrar Categoria</a></li>
+                                <li><a class="dropdown-item" href={% url 'lista_categoria' %}>Consultar Categoria</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="dropdown-item" href="#">
                             Obras &raquo;</a>
                             <ul class="dropdown-menu submenu">
                                 <li><a class="dropdown-item" href={% url 'crear_obra' %}>Registrar Obra</a></li>
@@ -58,7 +68,13 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Log Admin</a></li>
+                        <li><a class="dropdown-item" href="#">
+                            Reportes &raquo;</a>
+                            <ul class="dropdown-menu submenu">
+                                <li><a class="dropdown-item" href={% url 'reporte_clientes' %}>Clientes</a></li>
+                                <li><a class="dropdown-item" href={% url 'reporte_ventas' %}>Ventas</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 {% endif %}
@@ -81,12 +97,6 @@
                 </li>
                 
             </ul>
-            <!--
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-            -->
         </div>
     </div>
 </nav>

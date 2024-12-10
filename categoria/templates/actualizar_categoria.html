@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="mt-4">
+    <h2>Actualizar categoria.</h2>
+</div>
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre de la obra:</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" value="{{ categoria.nombre }}">
+    </div>
+    <div class="mb-4">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="javascript:history.back()" class="btn btn-primary">Cancelar</a>
+    </div>
+    
+</form>
+{% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

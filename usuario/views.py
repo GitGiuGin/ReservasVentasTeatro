@@ -1,4 +1,3 @@
-# usuario/views.py
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -6,6 +5,8 @@ from django.db.models import Count
 from django.db.models import Q
 from .models import Usuario
 from reserva.models import Reserva, ReservaAsiento
+from reserva.views import precio_total
+from datetime import date
 
 def clientesForm(request):
     return render(request, 'crear_cliente.html')
@@ -141,14 +142,57 @@ def mis_reservas(request):
         'funcion__id',
         'funcion__fecha',
         'funcion__hora',
+        'estado',
         'fecha_reserva',
         'id',
         'funcion__obra__nombre',
+        'funcion__obra__precio',
         'asientos_reservados'
     ).order_by('id')
     
+    # Calcular el precio total para cada reserva y agregarlo a cada objeto
+    for reserva in reservas:
+        reserva['total_a_pagar'] = precio_total(reserva['asientos_reservados'], reserva['funcion__obra__precio'])
+
+    # Crear el contexto para pasar a la plantilla
     data = {
-        'reservas': reservas
+        'reservas': reservas,
+        'today': date.today(),
     }
     
     return render(request, "mis_reservas.html", data)
+
+def mis_compras(request):
+    usuario = request.user
+    search_query = request.GET.get("searchReserva", "")
+    
+    reservas = Reserva.objects.filter(
+        cliente__id=usuario.id,
+        estado="Pagado"
+    ).annotate(
+        asientos_reservados=Count('reservas_asientos')  # Contamos el número de asientos reservados
+    ).select_related('funcion', 'funcion__obra').filter(
+        Q(funcion__fecha__icontains=search_query) |
+        Q(funcion__hora__icontains=search_query) |
+        Q(fecha_reserva__icontains=search_query)    
+    ).values(
+        'funcion__id',
+        'funcion__fecha',
+        'funcion__hora',
+        'estado',
+        'fecha_reserva',
+        'id',
+        'funcion__obra__nombre',
+        'funcion__obra__precio',
+        'asientos_reservados'
+    ).order_by('id')
+    
+    # Calcular el precio total para cada reserva y agregarlo a cada objeto
+    for reserva in reservas:
+        reserva['total_a_pagar'] = precio_total(reserva['asientos_reservados'], reserva['funcion__obra__precio'])
+
+    # Crear el contexto para pasar a la plantilla
+    data = {
+        'reservas': reservas,
+    }
+    return render(request, "mis_compras.html", data)

@@ -2,13 +2,18 @@
 
 {% block content %}
 <style>
-    .table th, .table td {
+    .table th,
+    .table td {
         text-align: center;
     }
-    
+
     .btn-dark {
         background-color: #343a40;
         border-color: #343a40;
+    }
+
+    .modal-content {
+        padding: 20px;
     }
 </style>
 <div class="container mt-4">
@@ -39,6 +44,7 @@
                 <th class="text-center" scope="col">Hora</th>
                 <th class="text-center" scope="col">Reservado</th>
                 <th class="text-center" scope="col">Asientos</th>
+                <th class="text-center" scope="col">Estado</th>
                 <th class="text-center" scope="col">Acciones</th>
             </tr>
         </thead>
@@ -46,22 +52,85 @@
             {% for r in reservas %}
             <tr>
                 <td class="text-center">{{ r.funcion__obra__nombre}}</td>
-                <td class="text-center">{{ r.funcion__fecha}}</td>
-                <td class="text-center">{{ r.funcion__hora}}</td>
-                <td class="text-center">{{ r.fecha_reserva}}</td>
+                <td class="text-center">{{ r.funcion__fecha|date:"d/m/Y"}}</td>
+                <td class="text-center">{{ r.funcion__hora|time:"H:i"}}</td>
+                <td class="text-center">{{ r.fecha_reserva|date:"d/m/Y"}}</td>
                 <td class="text-center">{{ r.asientos_reservados}}</td>
+                <td class="text-center">{{ r.estado}}</td>
                 <td class="text-center">
-                    <a href="{% url 'editar_asiento' r.id r.funcion__id %}" class="btn btn-primary mr-1">
+                    <button class="btn btn-primary mr-1" data-bs-toggle="modal"
+                            data-bs-target="#paymentModal-{{ r.id }}"
+                            {% if r.estado == "Pagado" or r.estado == "Cancelado" or r.funcion__fecha < today %}
+                            disabled
+                            {% endif %}>
+                        Pagar
+                    </button>
+                    <a href="{% url 'editar_asiento' r.id r.funcion__id %}" class="btn btn-primary mr-1
+                        {% if r.estado == "Pagado" or r.estado == "Cancelado" or r.funcion__fecha < today %}
+                        disabled
+                        {% endif %}">
                         Editar
                     </a>
-                    <a href="{% url 'cancelar_reserva' r.id %}" class="btn btn-primary mr-1">
+                    <a href="{% url 'cancelar_reserva' r.id %}" class="btn btn-primary mr-1
+                        {% if r.estado == "Pagado" or r.estado == "Cancelado" or r.funcion__fecha < today %}
+                        disabled 
+                        {% endif %}">
                         Cancelar
                     </a>
-                </th>
+                </td>
             </tr>
+            <!-- Modal de Pago para cada reserva -->
+            <div class="modal fade" id="paymentModal-{{ r.id }}" tabindex="-1" aria-labelledby="paymentModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="paymentModalLabel">Total a Pagar</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p>Total a pagar: {{ r.total_a_pagar }} Bs.-</p>
+                            <form action="{% url 'registrar_pago' r.id %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="container">
+                                    <!-- Grid para dos columnas -->
+                                    <div class="row">
+                                        <!-- Columna 1: Total a Pagar -->
+                                        <div class="col-6">
+                                            <label for="totalAPagar" class="form-label">Total a pagar:</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="totalAPagar" class="form-label">{{ r.total_a_pagar }}
+                                                Bs.-</label>
+                                            <input type="hidden" name="total_a_pagar" value={{ r.total_a_pagar }}>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <!-- Columna 2: Subir documento PDF -->
+                                        <div class="col-6">
+                                            <label class="form-label">Subir documento PDF:</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="file" id="pdfDocumento" class="form-control"
+                                                name="pdf_documento" accept="application/pdf" required>
+                                        </div>
+                                        <div class="modal-footer mt-3">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </tbody>
     </table>
 </div>
 
 {% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

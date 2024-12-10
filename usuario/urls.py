@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import consultar_clientes, crear_cliente, actualizar_cliente, custom_login_view, registro_cliente_desde_login, clientesForm, mis_reservas
+from .views import consultar_clientes, crear_cliente, actualizar_cliente, custom_login_view, registro_cliente_desde_login, clientesForm, mis_reservas, mis_compras
 
 urlpatterns = [
     path('login/', custom_login_view, name='login'),
@@ -11,4 +11,5 @@ urlpatterns = [
     path('registrarDesdeLogin/', registro_cliente_desde_login, name='cliente_registrar_login'),
     path('list/update/<int:id>', actualizar_cliente, name='actualizar_cliente'),
     path('listaReservas/', mis_reservas, name='mis_reservas'),
+    path('listaCompras/', mis_compras, name='mis_compras'),
 ]

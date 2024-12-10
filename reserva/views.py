@@ -24,7 +24,8 @@ def nuevaReserva(request):
     reserva = Reserva.objects.create(
             fecha_reserva=fecha_reserva, 
             funcion=funcion_especifica,
-            cliente=usuario_especifico
+            cliente=usuario_especifico,
+            estado="Reservado"
         )
     
     # Guardar los IDs de los asientos como objetos de la clase ReservaAsiento
@@ -176,12 +177,16 @@ def editarReserva(request, reserva_id):
             asiento=asiento,
             estado=False  # Estado en ReservaAsiento, asumiendo que 'False' significa que el asiento está reservado
         )
+        
+    reserva.estado = "Modificado"
+    reserva.save()
     
     return redirect('mis_reservas')
 
 def cancelar_reserva (request, reserva_id):
     reserva = get_object_or_404(Reserva, id=reserva_id)
-    reserva.delete()
+    reserva.estado = "Cancelado"
+    reserva.save()
     eliminar_registros = ReservaAsiento.objects.filter(reserva_id=reserva_id)
     eliminar_registros.delete()
     

@@ -8,7 +8,7 @@ class Reserva(models.Model):
     cliente = models.ForeignKey(Usuario, on_delete=models.CASCADE, verbose_name="Cliente")
     funcion = models.ForeignKey(Funcion, on_delete=models.CASCADE, verbose_name="Funcion", blank=True, null=True)
     fecha_reserva = models.DateField(verbose_name="Fecha de la reserva", null=True, blank=True)
-    pagado = models.BooleanField(default=False, verbose_name="Pago realizado")
+    estado = models.CharField(max_length=20, verbose_name="Estado reserva")
 
     class Meta:
         verbose_name = "Reserva"

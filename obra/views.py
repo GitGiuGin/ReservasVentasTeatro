@@ -1,34 +1,42 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from datetime import datetime
 from obra.models import Obra
 from actores.models import Actores
 from funciones.models import Funcion
+from categoria.models import Categoria
 from asiento.views import verificarDisponibilidad
 
 # Create your views here.
 def crear_obra(request):
+    categorias = Categoria.objects.all()
     actores = Actores.objects.all()  # Obtener la lista de actores
     data = {
-        "actores": actores
+        "actores": actores,
+        'categorias': categorias
     }
 
     if request.method == 'POST':
         nombre = request.POST.get('nombre').title()
         precio = request.POST.get('precio')
         imagen = request.FILES.get('imagen')
+        categoria_id = request.POST.get('selectCategoria')
         actores_ids = request.POST.getlist('actores')
+        
+        categoria = Categoria.objects.get(id=categoria_id)
 
         print(f"Nombre: {nombre}, Precio: {precio}, Imagen: {imagen}, Actores IDs: {actores_ids}")
         
         # Validar y crear la obra
-        if nombre and precio and imagen:
+        if nombre and categoria_id and precio and imagen:
             try:
                 precio = float(precio)
                 obra = Obra(
                     nombre=nombre,
                     precio=precio,
-                    imagen=imagen
+                    imagen=imagen,
+                    categoria = categoria
                 )
                 obra.save()
 
@@ -47,11 +55,12 @@ def crear_obra(request):
 
 @login_required(login_url='login')
 def detalle_obra(request, id):
+    today = datetime.now()
+
     obra = Obra.objects.get(id=id)
-    funciones_por_obra = Funcion.objects.filter(obra=obra)
+    funciones_por_obra = Funcion.objects.filter(obra=obra, fecha__gte=today)
     actores = Actores.objects.all()
     actores_seleccionados = obra.actores.all()
-    
     total_asientos_disponibles_por_funcion = {}
 
     for funcion in funciones_por_obra:
@@ -71,11 +80,13 @@ def detalle_obra(request, id):
     return render(request, "detalle_obra.html", data)
 
 def actualizar_obra(request, id):
+    categorias = Categoria.objects.all()
     obra = Obra.objects.get(id=id)
     actores = Actores.objects.all()
     actores_seleccionados = obra.actores.all()
     
     data = {
+        "categorias": categorias,
         "obra" : obra,
         "actores" : actores,
         "actores_seleccionados" : actores_seleccionados
@@ -85,12 +96,16 @@ def actualizar_obra(request, id):
         nombre = request.POST.get('nombre').title()
         precio = request.POST.get('precio')
         imagen = request.FILES.get('imagen')
+        categoria_id = request.POST['selectCategoria']
         actores_ids = request.POST.getlist('actores')
+        
+        categoria = Categoria.objects.get(id=categoria_id)
 
         # Actualizar los datos de la obra
         try:
             obra.nombre = nombre
             obra.precio = float(precio)
+            obra.categoria = categoria
             
             if imagen:  # Actualizar la imagen solo si se proporciona una nueva
                 obra.imagen = imagen

@@ -13,9 +13,11 @@ urlpatterns = [
     path('obras/', include('obra.urls')),
     path('asiento/', include('asiento.urls')),
     path('actores/', include('actores.urls')),
-    #path('pagos/', include('pago.urls')),
+    path('pagos/', include('pago.urls')),
     path('funciones/', include('funciones.urls')),
     path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
+    path('categorias/', include('categoria.urls')),
+    path('categorias/', include('reportes.urls')),
 ]
 
 if settings.DEBUG:

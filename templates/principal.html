@@ -11,6 +11,7 @@
                     <!-- Establecemos una altura mínima para el título -->
                     <div class="mb-3" style="min-height: 24%;">
                         <h5 class="card-title text-center">{{ obra.nombre }}</h5>
+                        <label class="d-block text-end text-muted small mt-1"> {{ obra.categoria.nombre }}</label>
                     </div>
                     <ul class="list-group list-group-flush">
                         {% for f in funciones %}
